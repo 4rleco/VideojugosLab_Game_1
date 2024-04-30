@@ -5,6 +5,8 @@
 #include <SFML/System/Clock.hpp>
 #include <iostream>
 
+#include "GameManager.h"
+
 using namespace sf;
 using namespace std;
 
@@ -27,7 +29,7 @@ int main()
 	float initialPosY = fheight - 70;	
 	float posY = initialPosY;	
 
-	float gravity = 10.0f;
+	float gravity = 20.0f;
 
 	Vector2f speed(100.0f, 50.0f);
 
@@ -80,14 +82,13 @@ int main()
 
 		if (isOnFloor == false)
 		{
-			posY += gravity * dt.asSeconds();	
+			posY += gravity * dt.asSeconds();
 
 			rectangle.setPosition(posX, posY);
 
 			if (posY >= initialPosY)
 			{
 				isOnFloor = true;
-				cout << "true" << endl;
 			}			
 		}
 
