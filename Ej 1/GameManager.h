@@ -25,6 +25,8 @@ private:
 	int screenWidth;
 	int screenHeight;
 
+	bool grounded;
+
 public:
 	GameManager(RenderWindow* window);
 	~GameManager();

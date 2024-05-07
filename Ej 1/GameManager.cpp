@@ -8,7 +8,10 @@ GameManager::GameManager(RenderWindow* window)
 
 	this->screenWidth = 1080;
 	this->screenHeight = 720;
+
 	this->player = new Player(0.0f, 0.0f, 650.0f, 650.0f, 100.0f, 50.0f);
+
+	this->grounded = true;
 }
 
 GameManager::~GameManager()
@@ -31,26 +34,24 @@ void GameManager::PlayerMovement()
 	float playerPosX = player->GetPosX();
 	float playerPosY = player->GetPosY();
 
-	float gravity = 20.0f;
-
-	bool grounded = true;
+	float gravity = 40.0f;
 
 	if (Keyboard::isKeyPressed(Keyboard::D))
-	{ 
+	{
 		playerPosX += player->GetSpeed().x * dt.asSeconds();
-		player->SetPosX(playerPosX);		
+		player->SetPosX(playerPosX);
 		player->UpdatePosition(playerPosX, playerPosY);
 	}
 
-	if (grounded == true)
+
+	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
-		if (Keyboard::isKeyPressed(Keyboard::Space))
-		{
-			playerPosY -= player->GetSpeed().y * dt.asSeconds();
-			player->UpdatePosition(playerPosX, playerPosY);
-			grounded = false;
-		}
-	}	
+		playerPosY -= player->GetSpeed().y * dt.asSeconds();
+		player->SetPosY(playerPosY);
+		player->UpdatePosition(playerPosX, playerPosY);
+		grounded = false;
+	}
+
 
 	if (grounded == false)
 	{
