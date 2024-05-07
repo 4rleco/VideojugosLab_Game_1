@@ -25,8 +25,6 @@ private:
 
 	float thickness;
 
-	float gravity;
-
 	Vector2f speed;
 
 	bool isOnFloor;
@@ -45,8 +43,6 @@ public:
 
 	void SetPosX(float posX);
 	void SetPosY(float posY);
-
-	bool IsOnFloor();
 
 	Vector2f GetSpeed();
 

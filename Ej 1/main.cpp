@@ -63,37 +63,6 @@ int main()
 
 		gameManager.PlayerMovement();
 
-		/*if (Keyboard::isKeyPressed(Keyboard::D))
-		{			
-			posX += speed.x * dt.asSeconds();
-			rectangle.setPosition(posX, posY);
-		}
-
-		if(Keyboard::isKeyPressed(Keyboard::A))
-		{			
-			posX -= speed.x * dt.asSeconds();
-			rectangle.setPosition(posX, posY);
-		}
-
-		if (Keyboard::isKeyPressed(Keyboard::Space))
-		{
-			posY -= speed.y * dt.asSeconds();
-			rectangle.setPosition(posX, posY);
-			isOnFloor = false;
-		}
-
-		if (isOnFloor == false)
-		{
-			posY += gravity * dt.asSeconds();
-
-			rectangle.setPosition(posX, posY);
-
-			if (posY >= initialPosY)
-			{
-				isOnFloor = true;
-			}			
-		}*/
-
 		window.clear();
 		window.draw(floor);
 		gameManager.DrawGame();

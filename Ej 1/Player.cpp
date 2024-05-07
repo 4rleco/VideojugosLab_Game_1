@@ -18,11 +18,7 @@ Player::Player(float initialPosX, float posX, float initialPosY,
 
 	this->thickness = 10;
 
-	this->gravity = 20.0f;
-
 	this->speed = Vector2f(100.0f, 50.0f);
-
-	this->isOnFloor = true;
 }
 
 Player::~Player()
@@ -61,11 +57,6 @@ void Player::SetPosX(float posX)
 void Player::SetPosY(float posY)
 {
 	this->posY = posY;
-}
-
-bool Player::IsOnFloor()
-{
-	return isOnFloor;
 }
 
 Vector2f Player::GetSpeed()

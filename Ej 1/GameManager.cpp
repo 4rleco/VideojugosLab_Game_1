@@ -31,16 +31,37 @@ void GameManager::PlayerMovement()
 	float playerPosX = player->GetPosX();
 	float playerPosY = player->GetPosY();
 
+	float gravity = 20.0f;
+
+	bool grounded = true;
+
 	if (Keyboard::isKeyPressed(Keyboard::D))
-	{
-		cout << playerPosX << endl;
- 
+	{ 
 		playerPosX += player->GetSpeed().x * dt.asSeconds();
-
-		cout << playerPosX << endl;
-
 		player->SetPosX(playerPosX);		
 		player->UpdatePosition(playerPosX, playerPosY);
+	}
+
+	if (grounded == true)
+	{
+		if (Keyboard::isKeyPressed(Keyboard::Space))
+		{
+			playerPosY -= player->GetSpeed().y * dt.asSeconds();
+			player->UpdatePosition(playerPosX, playerPosY);
+			grounded = false;
+		}
+	}	
+
+	if (grounded == false)
+	{
+		playerPosY += gravity * dt.asSeconds();
+		player->SetPosY(playerPosY);
+		player->UpdatePosition(playerPosX, playerPosY);
+
+		if (playerPosY >= 650.0f)
+		{
+			grounded = true;
+		}
 	}
 }
 
