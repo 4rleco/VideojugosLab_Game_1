@@ -14,20 +14,26 @@ using namespace std;
 class GameManager
 {
 private:
-	Player player;
+	Player* player;
 
 	Clock clock;
 
 	Time dt;
 
-	RenderWindow window;
+	RenderWindow* window;
 
 	int screenWidth;
 	int screenHeight;
 
 public:
-	GameManager();
+	GameManager(RenderWindow* window);
 	~GameManager();
 
+	void CreateGame();
+
+	void RestartClock();
+
 	void PlayerMovement();
+
+	void DrawGame();
 };

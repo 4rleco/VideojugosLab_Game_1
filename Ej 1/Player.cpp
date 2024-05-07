@@ -1,9 +1,9 @@
 #include "Player.h"
 
-Player::Player(RectangleShape rectangle, float initialPosX, float posX, float initialPosY,
-	float posY, float height, float width, bool isOnFloor)
+Player::Player(float initialPosX, float posX, float initialPosY,
+	float posY, float height, float width)
 {
-	this->rectangle = rectangle;
+	this->rectangle = RectangleShape();
 
 	this->color = Color::Blue;
 
@@ -22,17 +22,17 @@ Player::Player(RectangleShape rectangle, float initialPosX, float posX, float in
 
 	this->speed = Vector2f(100.0f, 50.0f);
 
-	this->isOnFloor = isOnFloor;
-}
-
-Player::Player()
-{
-
+	this->isOnFloor = true;
 }
 
 Player::~Player()
 {
 	cout << "The player has been destroyed" << endl;
+}
+
+RectangleShape Player::GetPlayerShape()
+{
+	return rectangle;
 }
 
 void Player::CreatePlayer()
@@ -43,28 +43,24 @@ void Player::CreatePlayer()
 	rectangle.setPosition(initialPosX, initialPosY);
 }
 
-int Player::GetPosX()
+float Player::GetPosX()
 {
 	return posX;
 }
 
-int Player::GetPosY()
+float Player::GetPosY()
 {
 	return posY;
 }
 
-int Player::SetPosX(float posX)
+void Player::SetPosX(float posX)
 {
 	this->posX = posX;
-
-	return this->posX;
 }
 
-int Player::SetPosY(float posY)
+void Player::SetPosY(float posY)
 {
 	this->posY = posY;
-
-	return this->posY;
 }
 
 bool Player::IsOnFloor()
@@ -77,7 +73,7 @@ Vector2f Player::GetSpeed()
 	return speed;
 }
 
-RectangleShape Player::ChangePosition()
+void Player::UpdatePosition(float& posX, float& posY)
 {
-	return rectangle.setPosition(posX, posY);
+	rectangle.setPosition(posX, posY);
 }

@@ -32,22 +32,23 @@ private:
 	bool isOnFloor;
 
 public:
-	Player(RectangleShape rectangle, float initialPosX, float posX, float initialPosY,
-		float posY, float height, float width, bool isOnFloor);
-	Player();
+	Player(float initialPosX, float posX, float initialPosY,
+		float posY, float height, float width);
 	~Player();
+
+	RectangleShape GetPlayerShape();
 
 	void CreatePlayer();
 
-	int GetPosX();
-	int GetPosY();
+	float GetPosX();
+	float GetPosY();
 
-	int SetPosX(float posX);
-	int SetPosY(float posY);
+	void SetPosX(float posX);
+	void SetPosY(float posY);
 
 	bool IsOnFloor();
 
 	Vector2f GetSpeed();
 
-	RectangleShape ChangePosition();
+	void UpdatePosition(float& posX, float& posY);
 };

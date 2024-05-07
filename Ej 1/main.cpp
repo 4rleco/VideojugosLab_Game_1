@@ -19,6 +19,12 @@ int main()
 	int screenWidth = 1080;
 	int screenHeight = 720;
 
+	RenderWindow window(VideoMode(screenWidth, screenHeight), "SFML works!");
+
+	GameManager gameManager = GameManager(&window);
+
+
+
 	float fwidth = screenWidth;
 	float fheight = screenHeight;
 	float FposX = 0.0f;
@@ -33,25 +39,19 @@ int main()
 
 	Vector2f speed(100.0f, 50.0f);
 
-	bool isOnFloor = true;
-
-	RenderWindow window(VideoMode(screenWidth, screenHeight), "SFML works!");
-
-	RectangleShape rectangle;
-	rectangle.setSize(Vector2f(100, 50));
-	rectangle.setOutlineColor(Color::Blue);
-	rectangle.setOutlineThickness(10);
-	rectangle.setPosition(initialPosX, initialPosY);	
+	bool isOnFloor = true;	
 
 	RectangleShape floor;
 	floor.setSize(Vector2f(fwidth,fheight));
 	floor.setOutlineColor(Color::Red);
 	floor.setOutlineThickness(5);
 	floor.setPosition(FposX, FposY);
+	
+	gameManager.CreateGame();
 
 	while (window.isOpen())
 	{
-		dt = clock.restart();
+		gameManager.RestartClock();
 
 		Event event;
 
@@ -61,7 +61,9 @@ int main()
 				window.close();
 		}
 
-		if (Keyboard::isKeyPressed(Keyboard::D))
+		gameManager.PlayerMovement();
+
+		/*if (Keyboard::isKeyPressed(Keyboard::D))
 		{			
 			posX += speed.x * dt.asSeconds();
 			rectangle.setPosition(posX, posY);
@@ -90,11 +92,11 @@ int main()
 			{
 				isOnFloor = true;
 			}			
-		}
+		}*/
 
 		window.clear();
 		window.draw(floor);
-		window.draw(rectangle);
+		gameManager.DrawGame();
 		window.display();
 	}
 
