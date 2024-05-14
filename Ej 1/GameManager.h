@@ -27,9 +27,15 @@ private:
 
 	bool grounded;
 
+	bool isAlive;
+
 public:
 	GameManager(RenderWindow* window);
 	~GameManager();
+
+	void InitGame(RectangleShape& floor);
+
+	void RunGame();
 
 	void CreateGame();
 
