@@ -4,6 +4,8 @@ GameManager::GameManager(RenderWindow* window)
 {
 	this->clock = Clock();
 	this->dt = Time();
+	this->font = Font();
+	this->text = Text();
 	this->window = window;
 
 	this->screenWidth = 1080;
@@ -17,7 +19,6 @@ GameManager::GameManager(RenderWindow* window)
 
 	this->isAlive = true;
 }
-
 
 GameManager::~GameManager()
 {
@@ -56,7 +57,6 @@ void GameManager::PlayerMovement()
 		grounded = false;
 	}
 
-
 	if (grounded == false)
 	{
 		playerPosY += gravity * dt.asSeconds();
@@ -68,6 +68,24 @@ void GameManager::PlayerMovement()
 			grounded = true;
 		}
 	}
+}
+
+void GameManager::Score(float& score)
+{
+	score += dt.asSeconds();	
+
+	cout << score << endl;
+}
+
+void GameManager::ScoreText(int score)
+{
+	string score_txt = "Score " + to_string(score);
+
+	text = Text(score_txt, font);
+	text.setCharacterSize(20);
+	text.setStyle(Text::Bold);
+	text.setFillColor(Color::Yellow);
+	text.setPosition(800.0f, 2.0f);
 }
 
 void GameManager::ObstacleMovement()
@@ -90,8 +108,6 @@ bool GameManager::PlayerNObstacleCollision(bool& collision)
 		(player->GetPosX() <= obstacle.GetPosX() + obstacle.GetWidh()) &&
 		(player->GetPosY() <= obstacle.GetPosY() + obstacle.GetHeight()))
 	{
-		cout << "collide" << endl;
-
 		return collision = true;
 	}
 }
@@ -101,11 +117,15 @@ void GameManager::DrawGame()
 	window->draw(player->GetPlayerShape());
 
 	window->draw(obstacle.GetObstacleShape());
+
+	window->draw(text);
 }
 
 void GameManager::InitGame(RectangleShape& floor)
 {
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
+
+	font.loadFromFile("font/arial.ttf");
 
 	float fwidth = screenWidth;
 	float fheight = screenHeight;
@@ -128,6 +148,8 @@ void GameManager::RunGame()
 
 	InitGame(floor);
 
+	float score = 0;
+
 	bool PlayerObstacleCollide = false;
 
 	while (window->isOpen() && player->IsAlive(PlayerObstacleCollide) == false)
@@ -145,6 +167,10 @@ void GameManager::RunGame()
 		PlayerMovement();
 
 		ObstacleMovement();
+
+		Score(score);
+
+		ScoreText(score);
 
 		PlayerNObstacleCollision(PlayerObstacleCollide);
 

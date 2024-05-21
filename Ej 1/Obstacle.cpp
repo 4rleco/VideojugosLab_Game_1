@@ -55,8 +55,6 @@ float Obstacle::SetPosY()
 
 	} while (posY >= 720);
 
-	cout << posY << endl;
-
 	return posY;
 }
 

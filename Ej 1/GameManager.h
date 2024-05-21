@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -22,6 +23,10 @@ private:
 	Clock clock;
 
 	Time dt;
+
+	Font font;
+
+	Text text;
 
 	RenderWindow* window;
 
@@ -47,6 +52,10 @@ public:
 	void StartRand();
 
 	void PlayerMovement();
+
+	void Score(float& score);
+
+	void ScoreText(int score);
 
 	void ObstacleMovement();
 
