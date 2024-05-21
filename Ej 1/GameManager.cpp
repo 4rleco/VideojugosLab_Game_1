@@ -83,6 +83,19 @@ void GameManager::ObstacleMovement()
 	obstacle.RestarPosiion();
 }
 
+bool GameManager::PlayerNObstacleCollision(bool& collision)
+{
+	if ((player->GetPosX() + player->GetWidh() >= obstacle.GetPosX()) &&
+		(player->GetPosY() + player->GetHeight() >= obstacle.GetPosY()) &&
+		(player->GetPosX() <= obstacle.GetPosX() + obstacle.GetWidh()) &&
+		(player->GetPosY() <= obstacle.GetPosY() + obstacle.GetHeight()))
+	{
+		cout << "collide" << endl;
+
+		return collision = true;
+	}
+}
+
 void GameManager::DrawGame()
 {
 	window->draw(player->GetPlayerShape());
@@ -115,7 +128,9 @@ void GameManager::RunGame()
 
 	InitGame(floor);
 
-	while (window->isOpen())
+	bool PlayerObstacleCollide = false;
+
+	while (window->isOpen() && player->IsAlive(PlayerObstacleCollide) == false)
 	{
 		RestartClock();
 
@@ -130,6 +145,8 @@ void GameManager::RunGame()
 		PlayerMovement();
 
 		ObstacleMovement();
+
+		PlayerNObstacleCollision(PlayerObstacleCollide);
 
 		window->clear();
 		window->draw(floor);

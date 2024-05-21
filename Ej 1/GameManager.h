@@ -50,5 +50,7 @@ public:
 
 	void ObstacleMovement();
 
+	bool PlayerNObstacleCollision(bool& collision);
+
 	void DrawGame();
 };

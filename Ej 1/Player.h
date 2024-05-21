@@ -20,12 +20,14 @@ private:
 	float posX;
 	float posY;
 
-	float height;
 	float width;
+	float height;
 
 	float thickness;
 
 	Vector2f speed;
+
+	bool isAlive;
 
 public:
 	Player(float initialPosX, float posX, float initialPosY,
@@ -39,10 +41,15 @@ public:
 	float GetPosX();
 	float GetPosY();
 
+	float GetWidh();
+	float GetHeight();
+
 	void SetPosX(float posX);
 	void SetPosY(float posY);
 
 	Vector2f GetSpeed();
 
 	void UpdatePosition(float& posX, float& posY);
+
+	bool IsAlive(bool isAlive);
 };

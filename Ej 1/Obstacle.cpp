@@ -22,6 +22,26 @@ Obstacle::~Obstacle()
 	cout << "An obstacle has been dstroyed" << endl;
 }
 
+float Obstacle::GetPosX()
+{
+	return posX;
+}
+
+float Obstacle::GetPosY()
+{
+	return posY;
+}
+
+float Obstacle::GetWidh()
+{
+	return width;
+}
+
+float Obstacle::GetHeight()
+{
+	return height;
+}
+
 void Obstacle::SetPosX(float speed)
 {
 	this->posX -= speed;

@@ -19,8 +19,8 @@ private:
 	float posX;
 	float posY;
 
-	float height;
 	float width;
+	float height;
 
 	float thickness;
 
@@ -31,6 +31,12 @@ public:
 	void CreateObstacle();
 
 	RectangleShape GetObstacleShape();
+
+	float GetPosX();
+	float GetPosY();
+
+	float GetWidh();
+	float GetHeight();
 
 	void SetPosX(float speed);
 	float SetPosY();

@@ -19,6 +19,8 @@ Player::Player(float initialPosX, float posX, float initialPosY,
 	this->thickness = 10;
 
 	this->speed = Vector2f(100.0f, 50.0f);
+
+	this->isAlive = true;
 }
 
 Player::~Player()
@@ -49,6 +51,16 @@ float Player::GetPosY()
 	return posY;
 }
 
+float Player::GetWidh()
+{
+	return width;
+}
+
+float Player::GetHeight()
+{
+	return height;
+}
+
 void Player::SetPosX(float posX)
 {
 	this->posX = posX;
@@ -67,4 +79,11 @@ Vector2f Player::GetSpeed()
 void Player::UpdatePosition(float& posX, float& posY)
 {
 	rectangle.setPosition(posX, posY);
+}
+
+bool Player::IsAlive(bool isAlive)
+{
+	this->isAlive = isAlive;
+
+	return isAlive;
 }
