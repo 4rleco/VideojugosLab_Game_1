@@ -33,7 +33,7 @@ RectangleShape Player::GetPlayerShape()
 
 void Player::CreatePlayer()
 {
-	rectangle.setSize(Vector2f(height, width));
+	rectangle.setSize(Vector2f(width, height));
 	rectangle.setOutlineColor(color);
 	rectangle.setOutlineThickness(thickness);
 	rectangle.setPosition(initialPosX, initialPosY);

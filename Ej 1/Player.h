@@ -27,8 +27,6 @@ private:
 
 	Vector2f speed;
 
-	bool isOnFloor;
-
 public:
 	Player(float initialPosX, float posX, float initialPosY,
 		float posY, float height, float width);

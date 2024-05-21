@@ -9,12 +9,15 @@ GameManager::GameManager(RenderWindow* window)
 	this->screenWidth = 1080;
 	this->screenHeight = 720;
 
-	this->player = new Player(screenWidth / 4, screenWidth / 4, 650.0f, 650.0f, 100.0f, 50.0f);
+	this->player = new Player(screenWidth / 4, screenWidth / 4, 650.0f, 650.0f, 50.0f, 100.0f);
+
+	this->obstacle = Obstacle::Obstacle();
 
 	this->grounded = true;
 
 	this->isAlive = true;
 }
+
 
 GameManager::~GameManager()
 {
@@ -24,6 +27,8 @@ GameManager::~GameManager()
 void GameManager::CreateGame()
 {
 	this->player->CreatePlayer();
+
+	obstacle.CreateObstacle();
 }
 
 void GameManager::RestartClock()
@@ -31,12 +36,17 @@ void GameManager::RestartClock()
 	this->dt = this->clock.restart();
 }
 
+void GameManager::StartRand()
+{
+	srand(time(NULL));
+}
+
 void GameManager::PlayerMovement()
 {
 	float playerPosX = player->GetPosX();
 	float playerPosY = player->GetPosY();
 
-	float gravity = 90.0f;
+	float gravity = 100.0f;
 
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
@@ -60,9 +70,24 @@ void GameManager::PlayerMovement()
 	}
 }
 
+void GameManager::ObstacleMovement()
+{
+	float speed = 100.0f;
+
+	speed *= dt.asSeconds();
+
+	obstacle.SetPosX(speed);
+
+	obstacle.UpdateObstaclePosition();
+
+	obstacle.RestarPosiion();
+}
+
 void GameManager::DrawGame()
 {
 	window->draw(player->GetPlayerShape());
+
+	window->draw(obstacle.GetObstacleShape());
 }
 
 void GameManager::InitGame(RectangleShape& floor)
@@ -78,6 +103,8 @@ void GameManager::InitGame(RectangleShape& floor)
 	floor.setOutlineColor(Color::Red);
 	floor.setOutlineThickness(5);
 	floor.setPosition(FposX, FposY);
+
+	StartRand();
 
 	CreateGame();
 }
@@ -101,6 +128,8 @@ void GameManager::RunGame()
 		}
 
 		PlayerMovement();
+
+		ObstacleMovement();
 
 		window->clear();
 		window->draw(floor);

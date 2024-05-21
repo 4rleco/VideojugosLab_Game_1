@@ -7,6 +7,7 @@
 #include <iostream>
 
 #include "Player.h"
+#include "Obstacle.h"
 
 using namespace sf;
 using namespace std;
@@ -15,6 +16,8 @@ class GameManager
 {
 private:
 	Player* player;
+
+	Obstacle obstacle;
 
 	Clock clock;
 
@@ -41,7 +44,11 @@ public:
 
 	void RestartClock();
 
+	void StartRand();
+
 	void PlayerMovement();
+
+	void ObstacleMovement();
 
 	void DrawGame();
 };
