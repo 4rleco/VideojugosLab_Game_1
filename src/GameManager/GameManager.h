@@ -7,8 +7,8 @@
 #include <SFML/System/Clock.hpp>
 #include <iostream>
 
-#include "Player.h"
-#include "Obstacle.h"
+#include "Objects/Player.h"
+#include "Objects/Obstacle.h"
 
 using namespace sf;
 using namespace std;
