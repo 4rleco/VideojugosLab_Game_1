@@ -15,6 +15,8 @@ GameManager::GameManager(RenderWindow* window)
 
 	this->obstacle = Obstacle::Obstacle();
 
+	this->floor = Floor::Floor();
+
 	this->grounded = true;
 
 	this->isAlive = true;
@@ -30,6 +32,8 @@ void GameManager::CreateGame()
 	this->player->CreatePlayer();
 
 	obstacle.CreateObstacle();
+
+	floor.CreateFloor();
 }
 
 void GameManager::RestartClock()
@@ -63,18 +67,13 @@ void GameManager::PlayerMovement()
 		player->SetPosY(playerPosY);
 		player->UpdatePosition(playerPosX, playerPosY);
 
-		if (playerPosY >= 650.0f)
-		{
-			grounded = true;
-		}
+		PlayerNFloorCollision(grounded);		
 	}
 }
 
 void GameManager::Score(float& score)
 {
-	score += dt.asSeconds();	
-
-	cout << score << endl;
+	score += dt.asSeconds();
 }
 
 void GameManager::ScoreText(int score)
@@ -90,7 +89,7 @@ void GameManager::ScoreText(int score)
 
 void GameManager::ObstacleMovement()
 {
-	float speed = 100.0f;
+	float speed = 300.0f;
 
 	speed *= dt.asSeconds();
 
@@ -99,6 +98,19 @@ void GameManager::ObstacleMovement()
 	obstacle.UpdateObstaclePosition();
 
 	obstacle.RestarPosiion();
+}
+
+void GameManager::FloorMovement()
+{
+	float speed = 200.0f;
+
+	speed *= dt.asSeconds();
+
+	floor.SetPosX(speed);
+
+	floor.UpdateFloorPosition();
+
+	floor.RestarPosition();
 }
 
 bool GameManager::PlayerNObstacleCollision(bool& collision)
@@ -112,8 +124,34 @@ bool GameManager::PlayerNObstacleCollision(bool& collision)
 	}
 }
 
+bool GameManager::PlayerNFloorCollision(bool& collision)
+{
+	if ((player->GetPosX() + player->GetWidh() >= floor.GetPosX()) &&
+		(player->GetPosY() + player->GetHeight() >= floor.GetPosY()) &&
+		(player->GetPosX() <= floor.GetPosX() + floor.GetWidh()) &&
+		(player->GetPosY() <= floor.GetPosY() + floor.GetHeight()))
+	{
+		return collision = true;
+	}
+}
+
+bool GameManager::PlayerFallsOfScreen(bool& collision)
+{
+	if (player->GetPosY() + player->GetHeight()/2 > screenHeight)
+	{
+		return collision = true;
+	}
+
+	if (player->GetPosY() <= 0)
+	{
+		player->SetPosY(0);
+	}
+}
+
 void GameManager::DrawGame()
 {
+	window->draw(floor.GetFloorShape());
+
 	window->draw(player->GetPlayerShape());
 
 	window->draw(obstacle.GetObstacleShape());
@@ -126,16 +164,6 @@ void GameManager::InitGame(RectangleShape& floor)
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
 
 	font.loadFromFile("font/arial.ttf");
-
-	float fwidth = screenWidth;
-	float fheight = screenHeight;
-	float FposX = 0.0f;
-	float FposY = 680.0f;
-
-	floor.setSize(Vector2f(fwidth, fheight));
-	floor.setOutlineColor(Color::Red);
-	floor.setOutlineThickness(5);
-	floor.setPosition(FposX, FposY);
 
 	StartRand();
 
@@ -150,9 +178,9 @@ void GameManager::RunGame()
 
 	float score = 0;
 
-	bool PlayerObstacleCollide = false;
+	bool collision = false;
 
-	while (window->isOpen() && player->IsAlive(PlayerObstacleCollide) == false)
+	while (window->isOpen() && player->IsAlive(collision) == false)
 	{
 		RestartClock();
 
@@ -168,11 +196,15 @@ void GameManager::RunGame()
 
 		ObstacleMovement();
 
+		FloorMovement();
+
 		Score(score);
 
 		ScoreText(score);
 
-		PlayerNObstacleCollision(PlayerObstacleCollide);
+		PlayerNObstacleCollision(collision);
+
+		PlayerFallsOfScreen(collision);
 
 		window->clear();
 		window->draw(floor);

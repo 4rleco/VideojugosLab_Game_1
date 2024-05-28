@@ -19,7 +19,7 @@ Obstacle::Obstacle()
 
 Obstacle::~Obstacle()
 {
-	cout << "An obstacle has been dstroyed" << endl;
+	cout << "The obstacle has been dstroyed" << endl;
 }
 
 float Obstacle::GetPosX()

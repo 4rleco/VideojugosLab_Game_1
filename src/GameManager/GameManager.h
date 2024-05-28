@@ -9,6 +9,7 @@
 
 #include "Objects/Player.h"
 #include "Objects/Obstacle.h"
+#include "Objects/Floor.h"
 
 using namespace sf;
 using namespace std;
@@ -19,6 +20,8 @@ private:
 	Player* player;
 
 	Obstacle obstacle;
+
+	Floor floor;
 
 	Clock clock;
 
@@ -59,7 +62,13 @@ public:
 
 	void ObstacleMovement();
 
+	void FloorMovement();
+
 	bool PlayerNObstacleCollision(bool& collision);
+
+	bool PlayerNFloorCollision(bool& collision);
+
+	bool PlayerFallsOfScreen(bool& collision);
 
 	void DrawGame();
 };
