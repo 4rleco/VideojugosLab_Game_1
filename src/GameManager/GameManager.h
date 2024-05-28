@@ -29,7 +29,9 @@ private:
 
 	Font font;
 
-	Text text;
+	Text score;
+
+	Text menu;
 
 	RenderWindow* window;
 
@@ -44,7 +46,9 @@ public:
 	GameManager(RenderWindow* window);
 	~GameManager();
 
-	void InitGame(RectangleShape& floor);
+	void DrawMenu();
+
+	void InitGame();
 
 	void RunGame();
 
@@ -58,7 +62,7 @@ public:
 
 	void Score(float& score);
 
-	void ScoreText(int score);
+	void ScoreText(int scoreInt);
 
 	void ObstacleMovement();
 
@@ -69,6 +73,8 @@ public:
 	bool PlayerNFloorCollision(bool& collision);
 
 	bool PlayerFallsOfScreen(bool& collision);
+
+	void GameLoop();
 
 	void DrawGame();
 };

@@ -24,12 +24,14 @@
     <ClCompile Include="..\src\Objects\Floor.cpp" />
     <ClCompile Include="..\src\Objects\Obstacle.cpp" />
     <ClCompile Include="..\src\Objects\Player.cpp" />
+    <ClCompile Include="..\src\Screen\Credits.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\GameManager\GameManager.h" />
     <ClInclude Include="..\src\Objects\Floor.h" />
     <ClInclude Include="..\src\Objects\Obstacle.h" />
     <ClInclude Include="..\src\Objects\Player.h" />
+    <ClInclude Include="..\src\Screen\Credits.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

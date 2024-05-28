@@ -5,7 +5,10 @@ GameManager::GameManager(RenderWindow* window)
 	this->clock = Clock();
 	this->dt = Time();
 	this->font = Font();
-	this->text = Text();
+
+	this->score = Text();
+	this->menu = Text();
+
 	this->window = window;
 
 	this->screenWidth = 1080;
@@ -76,15 +79,15 @@ void GameManager::Score(float& score)
 	score += dt.asSeconds();
 }
 
-void GameManager::ScoreText(int score)
+void GameManager::ScoreText(int scoreInt)
 {
-	string score_txt = "Score " + to_string(score);
+	string score_txt = "Score " + to_string(scoreInt);
 
-	text = Text(score_txt, font);
-	text.setCharacterSize(20);
-	text.setStyle(Text::Bold);
-	text.setFillColor(Color::Yellow);
-	text.setPosition(800.0f, 2.0f);
+	score = Text(score_txt, font);
+	score.setCharacterSize(20);
+	score.setStyle(Text::Bold);
+	score.setFillColor(Color::Yellow);
+	score.setPosition(800.0f, 2.0f);
 }
 
 void GameManager::ObstacleMovement()
@@ -156,10 +159,10 @@ void GameManager::DrawGame()
 
 	window->draw(obstacle.GetObstacleShape());
 
-	window->draw(text);
+	window->draw(score);
 }
 
-void GameManager::InitGame(RectangleShape& floor)
+void GameManager::InitGame()
 {
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
 
@@ -170,12 +173,37 @@ void GameManager::InitGame(RectangleShape& floor)
 	CreateGame();
 }
 
-void GameManager::RunGame()
+void GameManager::DrawMenu()
 {
-	RectangleShape floor;
+	enum mainmenu
+	{
+		game,
+		credits
+	};
 
-	InitGame(floor);
+	int selection = 0;
 
+	selection = mainmenu::game;
+
+	switch (selection)
+	{
+	case game:
+		break;
+	case credits:
+		break;
+	}	
+
+	menu = Text("Menu", font);
+	menu.setCharacterSize(100);
+	menu.setStyle(Text::Bold);
+	menu.setFillColor(Color::White);
+	menu.setPosition(420, 200);
+
+	window->draw(menu);
+}
+
+void GameManager::GameLoop()
+{
 	float score = 0;
 
 	bool collision = false;
@@ -207,8 +235,31 @@ void GameManager::RunGame()
 		PlayerFallsOfScreen(collision);
 
 		window->clear();
-		window->draw(floor);
 		DrawGame();
 		window->display();
 	}
+}
+
+void GameManager::RunGame()
+{
+	InitGame();
+
+	while (window->isOpen() /*&& player->IsAlive(collision) == false*/)
+	{
+		RestartClock();
+
+		Event event;
+
+		while (window->pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window->close();
+		}
+
+
+		
+		window->clear();
+		DrawMenu();
+		window->display();
+	}	
 }
