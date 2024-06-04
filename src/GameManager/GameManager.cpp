@@ -330,9 +330,7 @@ void GameManager::DrawCredits()
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
-			escaped;
-
-			RunGame();
+			escaped = true;
 		}
 
 		window->clear();
@@ -390,7 +388,7 @@ void GameManager::RunGame()
 
 	bool actionPressed = false;
 
-	while (window->isOpen() /*&& player->IsAlive(collision) == false*/)
+	while (window->isOpen())
 	{
 		RestartClock();
 
