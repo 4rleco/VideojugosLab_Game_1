@@ -312,13 +312,21 @@ void GameManager::DrawCredits()
 {
 	bool escaped = false;
 
+	Text credits2;
+
 	while (!escaped)
 	{
-		credits = Text("Credits", font);
-		credits.setCharacterSize(100);
+		credits = Text("Game Made By", font);
+		credits.setCharacterSize(80);
 		credits.setStyle(Text::Bold);
 		credits.setFillColor(Color::White);
-		credits.setPosition(400, 200);
+		credits.setPosition(300, 200);
+
+		credits2 = Text("Joaquin Herrero Ledner", font);
+		credits2.setCharacterSize(40);
+		credits2.setStyle(Text::Bold);
+		credits2.setFillColor(Color::White);
+		credits2.setPosition(300, 300);
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
@@ -329,6 +337,7 @@ void GameManager::DrawCredits()
 
 		window->clear();
 		window->draw(credits);
+		window->draw(credits2);
 		window->display();
 	}
 }
