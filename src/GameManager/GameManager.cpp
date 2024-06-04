@@ -5,7 +5,13 @@ GameManager::GameManager(RenderWindow* window)
 	this->clock = Clock();
 	this->dt = Time();
 	this->font = Font();
-	this->text = Text();
+
+	this->score = Text();
+	this->menu = Text();
+	this->game = Text();
+	this->credits = Text();
+	this->exit = Text();
+
 	this->window = window;
 
 	this->screenWidth = 1080;
@@ -67,7 +73,7 @@ void GameManager::PlayerMovement()
 		player->SetPosY(playerPosY);
 		player->UpdatePosition(playerPosX, playerPosY);
 
-		PlayerNFloorCollision(grounded);		
+		PlayerNFloorCollision(grounded);
 	}
 }
 
@@ -76,15 +82,15 @@ void GameManager::Score(float& score)
 	score += dt.asSeconds();
 }
 
-void GameManager::ScoreText(int score)
+void GameManager::ScoreText(int scoreInt)
 {
-	string score_txt = "Score " + to_string(score);
+	string score_txt = "Score " + to_string(scoreInt);
 
-	text = Text(score_txt, font);
-	text.setCharacterSize(20);
-	text.setStyle(Text::Bold);
-	text.setFillColor(Color::Yellow);
-	text.setPosition(800.0f, 2.0f);
+	score = Text(score_txt, font);
+	score.setCharacterSize(20);
+	score.setStyle(Text::Bold);
+	score.setFillColor(Color::Yellow);
+	score.setPosition(800.0f, 2.0f);
 }
 
 void GameManager::ObstacleMovement()
@@ -137,7 +143,7 @@ bool GameManager::PlayerNFloorCollision(bool& collision)
 
 bool GameManager::PlayerFallsOfScreen(bool& collision)
 {
-	if (player->GetPosY() + player->GetHeight()/2 > screenHeight)
+	if (player->GetPosY() + player->GetHeight() / 2 > screenHeight)
 	{
 		return collision = true;
 	}
@@ -156,10 +162,10 @@ void GameManager::DrawGame()
 
 	window->draw(obstacle.GetObstacleShape());
 
-	window->draw(text);
+	window->draw(score);
 }
 
-void GameManager::InitGame(RectangleShape& floor)
+void GameManager::InitGame()
 {
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
 
@@ -170,17 +176,258 @@ void GameManager::InitGame(RectangleShape& floor)
 	CreateGame();
 }
 
-void GameManager::RunGame()
+void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 {
-	RectangleShape floor;
+	enum MainMenu
+	{
+		Game,
+		Credits,
+		Exit
+	};
 
-	InitGame(floor);
+	int coolDown = 3;
 
+	int firstOption = Game;
+	int lastOption = Exit;
+
+	menu = Text("Menu", font);
+	menu.setCharacterSize(100);
+	menu.setStyle(Text::Bold);
+	menu.setFillColor(Color::White);
+	menu.setPosition(400, 200);
+
+	game = Text("Play", font);
+	game.setCharacterSize(50);
+	game.setStyle(Text::Bold);
+	game.setPosition(450, 420);
+
+	credits = Text("Credits", font);
+	credits.setCharacterSize(50);
+	credits.setStyle(Text::Bold);
+	credits.setPosition(450, 480);
+
+	exit = Text("Exit", font);
+	exit.setCharacterSize(50);
+	exit.setStyle(Text::Bold);
+	exit.setPosition(450, 540);
+
+
+	if (actionPressed == false)
+	{
+		if (Keyboard::isKeyPressed(Keyboard::W))
+		{
+			selection--;
+
+			actionPressed = true;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::S))
+		{
+			selection++;
+
+			actionPressed = true;
+		}
+	}
+
+	if (actionPressed == true)
+	{
+		timer += dt.asSeconds();
+
+		if (timer >= coolDown)
+		{
+			timer = 0;
+
+			actionPressed = false;
+		}
+	}
+
+	if (selection > lastOption)
+	{
+		selection = firstOption;
+	}
+
+	else if (selection < firstOption)
+	{
+		selection = lastOption;
+	}
+
+	switch (selection)
+	{
+	case Game:
+		if (selection == Game)
+		{
+			game.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				GameLoop();
+			}
+		}
+		else
+		{
+			game.setFillColor(Color::White);
+		}
+		break;
+
+	case Credits:
+		if (selection == Credits)
+		{
+			credits.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				DrawCredits();
+			}
+		}
+		else
+		{
+			credits.setFillColor(Color::White);
+		}
+		break;
+
+	case Exit:
+		if (selection == Exit)
+		{
+			exit.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				window->close();
+			}
+		}
+		else
+		{
+			exit.setFillColor(Color::White);
+		}
+		break;
+	}
+
+	window->draw(menu);
+	window->draw(game);
+	window->draw(credits);
+	window->draw(exit);
+}
+
+void GameManager::DrawPause()
+{
+	Text pause;
+
+	Text pause2;
+
+	pause = Text("Pause", font);
+	pause.setCharacterSize(100);
+	pause.setStyle(Text::Bold);
+	pause.setFillColor(Color::White);
+	pause.setPosition(400, 200);
+
+
+	pause2 = Text("Press space bar to continue", font);
+	pause2.setCharacterSize(40);
+	pause2.setStyle(Text::Bold);
+	pause2.setFillColor(Color::White);
+	pause2.setPosition(400, 320);
+
+	window->draw(pause);
+	window->draw(pause2);
+}
+
+void GameManager::DrawCredits()
+{
+	bool escaped = false;
+
+	Text credits2;
+
+	while (!escaped)
+	{
+		credits = Text("Game Made By", font);
+		credits.setCharacterSize(80);
+		credits.setStyle(Text::Bold);
+		credits.setFillColor(Color::White);
+		credits.setPosition(300, 200);
+
+		credits2 = Text("Joaquin Herrero Ledner", font);
+		credits2.setCharacterSize(40);
+		credits2.setStyle(Text::Bold);
+		credits2.setFillColor(Color::White);
+		credits2.setPosition(300, 300);
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			escaped = true;
+		}
+
+		window->clear();
+		window->draw(credits);
+		window->draw(credits2);
+		window->display();
+	}
+}
+
+void GameManager::GameLoop()
+{
 	float score = 0;
 
 	bool collision = false;
 
-	while (window->isOpen() && player->IsAlive(collision) == false)
+	bool pause = false;
+
+	while (player->IsAlive(collision) == false)
+	{
+		RestartClock();		
+
+		if (!pause)
+		{
+			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				pause = true;		
+			}			
+
+			PlayerMovement();
+
+			ObstacleMovement();
+
+			FloorMovement();
+
+			Score(score);
+
+			PlayerNObstacleCollision(collision);
+
+			PlayerFallsOfScreen(collision);
+		}
+
+		if (pause == true)
+		{
+			if (Keyboard::isKeyPressed(Keyboard::Space))
+			{
+				pause = false;
+			}
+		}
+
+		ScoreText(score);
+
+		window->clear();
+
+		if (pause == true)
+		{
+			DrawPause();
+		}
+
+		DrawGame();
+		window->display();
+	}
+}
+
+void GameManager::RunGame()
+{
+	InitGame();
+
+	int selection = 0;
+
+	float timer = 0;
+
+	bool actionPressed = false;
+
+	while (window->isOpen())
 	{
 		RestartClock();
 
@@ -192,23 +439,10 @@ void GameManager::RunGame()
 				window->close();
 		}
 
-		PlayerMovement();
-
-		ObstacleMovement();
-
-		FloorMovement();
-
-		Score(score);
-
-		ScoreText(score);
-
-		PlayerNObstacleCollision(collision);
-
-		PlayerFallsOfScreen(collision);
+		cout << timer << endl;
 
 		window->clear();
-		window->draw(floor);
-		DrawGame();
+		DrawMenu(selection, timer, actionPressed);
 		window->display();
 	}
 }
