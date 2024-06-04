@@ -54,6 +54,8 @@ public:
 
 	void DrawMenu(int& selection, float& timer, bool& actionPressed);
 
+	void DrawPause();
+
 	void DrawCredits();
 
 	void InitGame();

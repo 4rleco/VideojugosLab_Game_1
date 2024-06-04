@@ -308,6 +308,29 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 	window->draw(exit);
 }
 
+void GameManager::DrawPause()
+{
+	Text pause;
+
+	Text pause2;
+
+	pause = Text("Pause", font);
+	pause.setCharacterSize(100);
+	pause.setStyle(Text::Bold);
+	pause.setFillColor(Color::White);
+	pause.setPosition(400, 200);
+
+
+	pause2 = Text("Press space bar to continue", font);
+	pause2.setCharacterSize(40);
+	pause2.setStyle(Text::Bold);
+	pause2.setFillColor(Color::White);
+	pause2.setPosition(400, 320);
+
+	window->draw(pause);
+	window->draw(pause2);
+}
+
 void GameManager::DrawCredits()
 {
 	bool escaped = false;
@@ -346,33 +369,49 @@ void GameManager::GameLoop()
 
 	bool collision = false;
 
+	bool pause = false;
+
 	while (player->IsAlive(collision) == false)
 	{
-		RestartClock();
+		RestartClock();		
 
-		Event event;
-
-		while (window->pollEvent(event))
+		if (!pause)
 		{
-			if (event.type == Event::Closed)
-				window->close();
+			if (Keyboard::isKeyPressed(Keyboard::Escape))
+			{
+				pause = true;		
+			}			
+
+			PlayerMovement();
+
+			ObstacleMovement();
+
+			FloorMovement();
+
+			Score(score);
+
+			PlayerNObstacleCollision(collision);
+
+			PlayerFallsOfScreen(collision);
 		}
 
-		PlayerMovement();
-
-		ObstacleMovement();
-
-		FloorMovement();
-
-		Score(score);
+		if (pause == true)
+		{
+			if (Keyboard::isKeyPressed(Keyboard::Space))
+			{
+				pause = false;
+			}
+		}
 
 		ScoreText(score);
 
-		PlayerNObstacleCollision(collision);
-
-		PlayerFallsOfScreen(collision);
-
 		window->clear();
+
+		if (pause == true)
+		{
+			DrawPause();
+		}
+
 		DrawGame();
 		window->display();
 	}
