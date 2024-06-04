@@ -33,6 +33,12 @@ private:
 
 	Text menu;
 
+	Text game;
+
+	Text credits;
+
+	Text exit;
+
 	RenderWindow* window;
 
 	int screenWidth;

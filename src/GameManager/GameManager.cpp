@@ -8,6 +8,9 @@ GameManager::GameManager(RenderWindow* window)
 
 	this->score = Text();
 	this->menu = Text();
+	this->game = Text();
+	this->credits = Text();
+	this->exit = Text();
 
 	this->window = window;
 
@@ -177,19 +180,24 @@ void GameManager::DrawMenu()
 {
 	enum mainmenu
 	{
-		game,
-		credits
+		Game,
+		Credits,
+		Exit
 	};
 
 	int selection = 0;
 
-	selection = mainmenu::game;
+	selection = mainmenu::Game;
 
 	switch (selection)
 	{
-	case game:
+	case Game:
 		break;
-	case credits:
+
+	case Credits:
+		break;
+
+	case Exit:
 		break;
 	}	
 
@@ -197,9 +205,30 @@ void GameManager::DrawMenu()
 	menu.setCharacterSize(100);
 	menu.setStyle(Text::Bold);
 	menu.setFillColor(Color::White);
-	menu.setPosition(420, 200);
+	menu.setPosition(400, 200);
+
+	game = Text("Play", font);
+	game.setCharacterSize(50);
+	game.setStyle(Text::Bold);
+	game.setFillColor(Color::White);
+	game.setPosition(450, 420);
+
+	credits = Text("Credits", font);
+	credits.setCharacterSize(50);
+	credits.setStyle(Text::Bold);
+	credits.setFillColor(Color::White);
+	credits.setPosition(450, 480);
+
+	exit = Text("Exit", font);
+	exit.setCharacterSize(50);
+	exit.setStyle(Text::Bold);
+	exit.setFillColor(Color::White);
+	exit.setPosition(450, 540);
 
 	window->draw(menu);
+	window->draw(game);
+	window->draw(credits);
+	window->draw(exit);
 }
 
 void GameManager::GameLoop()
