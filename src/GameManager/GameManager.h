@@ -52,7 +52,9 @@ public:
 	GameManager(RenderWindow* window);
 	~GameManager();
 
-	void DrawMenu();
+	void DrawMenu(int& selection, float& timer, bool& actionPressed);
+
+	void DrawCredits();
 
 	void InitGame();
 

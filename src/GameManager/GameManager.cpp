@@ -73,7 +73,7 @@ void GameManager::PlayerMovement()
 		player->SetPosY(playerPosY);
 		player->UpdatePosition(playerPosX, playerPosY);
 
-		PlayerNFloorCollision(grounded);		
+		PlayerNFloorCollision(grounded);
 	}
 }
 
@@ -143,7 +143,7 @@ bool GameManager::PlayerNFloorCollision(bool& collision)
 
 bool GameManager::PlayerFallsOfScreen(bool& collision)
 {
-	if (player->GetPosY() + player->GetHeight()/2 > screenHeight)
+	if (player->GetPosY() + player->GetHeight() / 2 > screenHeight)
 	{
 		return collision = true;
 	}
@@ -176,30 +176,19 @@ void GameManager::InitGame()
 	CreateGame();
 }
 
-void GameManager::DrawMenu()
+void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 {
-	enum mainmenu
+	enum MainMenu
 	{
 		Game,
 		Credits,
 		Exit
 	};
 
-	int selection = 0;
+	int coolDown = 3;
 
-	selection = mainmenu::Game;
-
-	switch (selection)
-	{
-	case Game:
-		break;
-
-	case Credits:
-		break;
-
-	case Exit:
-		break;
-	}	
+	int firstOption = Game;
+	int lastOption = Exit;
 
 	menu = Text("Menu", font);
 	menu.setCharacterSize(100);
@@ -210,25 +199,138 @@ void GameManager::DrawMenu()
 	game = Text("Play", font);
 	game.setCharacterSize(50);
 	game.setStyle(Text::Bold);
-	game.setFillColor(Color::White);
 	game.setPosition(450, 420);
 
 	credits = Text("Credits", font);
 	credits.setCharacterSize(50);
 	credits.setStyle(Text::Bold);
-	credits.setFillColor(Color::White);
 	credits.setPosition(450, 480);
 
 	exit = Text("Exit", font);
 	exit.setCharacterSize(50);
 	exit.setStyle(Text::Bold);
-	exit.setFillColor(Color::White);
 	exit.setPosition(450, 540);
+
+
+	if (actionPressed == false)
+	{
+		if (Keyboard::isKeyPressed(Keyboard::W))
+		{
+			selection--;
+
+			actionPressed = true;
+		}
+
+		if (Keyboard::isKeyPressed(Keyboard::S))
+		{
+			selection++;
+
+			actionPressed = true;
+		}
+	}
+
+	if (actionPressed == true)
+	{
+		timer += dt.asSeconds();
+
+		if (timer >= coolDown)
+		{
+			timer = 0;
+
+			actionPressed = false;
+		}
+	}
+
+	if (selection > lastOption)
+	{
+		selection = firstOption;
+	}
+
+	else if (selection < firstOption)
+	{
+		selection = lastOption;
+	}
+
+	switch (selection)
+	{
+	case Game:
+		if (selection == Game)
+		{
+			game.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				GameLoop();
+			}
+		}
+		else
+		{
+			game.setFillColor(Color::White);
+		}
+		break;
+
+	case Credits:
+		if (selection == Credits)
+		{
+			credits.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				DrawCredits();
+			}
+		}
+		else
+		{
+			credits.setFillColor(Color::White);
+		}
+		break;
+
+	case Exit:
+		if (selection == Exit)
+		{
+			exit.setFillColor(Color::Red);
+
+			if (Keyboard::isKeyPressed(Keyboard::Enter))
+			{
+				window->close();
+			}
+		}
+		else
+		{
+			exit.setFillColor(Color::White);
+		}
+		break;
+	}
 
 	window->draw(menu);
 	window->draw(game);
 	window->draw(credits);
 	window->draw(exit);
+}
+
+void GameManager::DrawCredits()
+{
+	bool escaped = false;
+
+	while (!escaped)
+	{
+		credits = Text("Credits", font);
+		credits.setCharacterSize(100);
+		credits.setStyle(Text::Bold);
+		credits.setFillColor(Color::White);
+		credits.setPosition(400, 200);
+
+		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		{
+			escaped;
+
+			RunGame();
+		}
+
+		window->clear();
+		window->draw(credits);
+		window->display();
+	}
 }
 
 void GameManager::GameLoop()
@@ -237,7 +339,7 @@ void GameManager::GameLoop()
 
 	bool collision = false;
 
-	while (window->isOpen() && player->IsAlive(collision) == false)
+	while (player->IsAlive(collision) == false)
 	{
 		RestartClock();
 
@@ -273,6 +375,12 @@ void GameManager::RunGame()
 {
 	InitGame();
 
+	int selection = 0;
+
+	float timer = 0;
+
+	bool actionPressed = false;
+
 	while (window->isOpen() /*&& player->IsAlive(collision) == false*/)
 	{
 		RestartClock();
@@ -285,10 +393,10 @@ void GameManager::RunGame()
 				window->close();
 		}
 
+		cout << timer << endl;
 
-		
 		window->clear();
-		DrawMenu();
+		DrawMenu(selection, timer, actionPressed);
 		window->display();
-	}	
+	}
 }
