@@ -85,3 +85,9 @@ void Floor::RestarPosition()
 		SetWidth();
 	}
 }
+
+void Floor::ResetFloor()
+{
+	posX = initialPosX;
+	width = initialWidth;
+}

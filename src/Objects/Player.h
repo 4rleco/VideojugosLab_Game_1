@@ -52,4 +52,6 @@ public:
 	void UpdatePosition(float& posX, float& posY);
 
 	bool IsAlive(bool isAlive);
+
+	void RestartPlayer();
 };

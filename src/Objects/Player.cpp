@@ -87,3 +87,11 @@ bool Player::IsAlive(bool isAlive)
 
 	return isAlive;
 }
+
+void Player::RestartPlayer()
+{
+	posX = initialPosX;
+	posY = initialPosY;
+
+	isAlive = true;
+}

@@ -85,3 +85,8 @@ void Obstacle::RestarPosiion()
 		SetPosY();
 	}
 }
+
+void Obstacle::ResetObstacle()
+{
+	posX = initialPosX;
+}

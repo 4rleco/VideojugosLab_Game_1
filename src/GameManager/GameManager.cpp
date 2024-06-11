@@ -185,7 +185,7 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 		Exit
 	};
 
-	int coolDown = 3;
+	int coolDown = 1;
 
 	int firstOption = Game;
 	int lastOption = Exit;
@@ -321,14 +321,39 @@ void GameManager::DrawPause()
 	pause.setPosition(400, 200);
 
 
-	pause2 = Text("Press space bar to continue", font);
+	pause2 = Text("Press e key to continue", font);
 	pause2.setCharacterSize(40);
 	pause2.setStyle(Text::Bold);
 	pause2.setFillColor(Color::White);
-	pause2.setPosition(400, 320);
+	pause2.setPosition(300, 320);
 
 	window->draw(pause);
 	window->draw(pause2);
+}
+
+void GameManager::DrawDeath()
+{
+	Text death;
+
+	Text death2;
+
+	death = Text("You died", font);
+	death.setCharacterSize(100);
+	death.setStyle(Text::Bold);
+	death.setFillColor(Color::Red);
+	death.setPosition(300, 100);
+
+	death2 = Text("press e key to return to the menu", font);
+	death2.setCharacterSize(25);
+	death2.setStyle(Text::Bold);
+	death2.setFillColor(Color::Red);
+	death2.setPosition(320, 400);
+
+	score.setCharacterSize(50);
+	score.setPosition(420.0f, 320.0f);
+
+	window->draw(death);
+	window->draw(death2);
 }
 
 void GameManager::DrawCredits()
@@ -371,16 +396,20 @@ void GameManager::GameLoop()
 
 	bool pause = false;
 
-	while (player->IsAlive(collision) == false)
+	player->RestartPlayer();
+	obstacle.ResetObstacle();
+	floor.ResetFloor();
+
+	while (player->IsAlive(collision) == false || pause != false)
 	{
-		RestartClock();		
+		RestartClock();
 
 		if (!pause)
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
 			{
-				pause = true;		
-			}			
+				pause = true;
+			}
 
 			PlayerMovement();
 
@@ -395,25 +424,33 @@ void GameManager::GameLoop()
 			PlayerFallsOfScreen(collision);
 		}
 
+		ScoreText(score);		
+
+		window->clear();		
+
+		if (pause == true && player->IsAlive(collision) == false)
+		{
+			DrawPause();
+		}
+
+		if (player->IsAlive(collision) == true)
+		{
+			pause = true;
+
+			DrawDeath();
+		}		
+
 		if (pause == true)
 		{
-			if (Keyboard::isKeyPressed(Keyboard::Space))
+			if (Keyboard::isKeyPressed(Keyboard::E))
 			{
 				pause = false;
 			}
 		}
 
-		ScoreText(score);
-
-		window->clear();
-
-		if (pause == true)
-		{
-			DrawPause();
-		}
-
 		DrawGame();
-		window->display();
+
+		window->display();		
 	}
 }
 
@@ -438,8 +475,6 @@ void GameManager::RunGame()
 			if (event.type == Event::Closed)
 				window->close();
 		}
-
-		cout << timer << endl;
 
 		window->clear();
 		DrawMenu(selection, timer, actionPressed);

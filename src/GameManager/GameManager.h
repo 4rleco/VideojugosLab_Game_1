@@ -56,6 +56,8 @@ public:
 
 	void DrawPause();
 
+	void DrawDeath();
+
 	void DrawCredits();
 
 	void InitGame();

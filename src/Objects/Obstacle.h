@@ -44,4 +44,6 @@ public:
 	void UpdateObstaclePosition();
 
 	void RestarPosiion();
+
+	void ResetObstacle();
 };

@@ -44,4 +44,6 @@ public:
 	void UpdateFloorPosition();
 
 	void RestarPosition();
+
+	void ResetFloor();
 };
