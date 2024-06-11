@@ -20,6 +20,7 @@ GameManager::GameManager(RenderWindow* window)
 	this->player = new Player(screenWidth / 4, screenWidth / 4, 650.0f, 650.0f, 50.0f, 100.0f);
 
 	this->obstacle = Obstacle::Obstacle();
+	this->obstacle = Obstacle::Obstacle();
 
 	this->floor = Floor::Floor();
 
@@ -314,21 +315,30 @@ void GameManager::DrawPause()
 
 	Text pause2;
 
+	Text pause3;
+
 	pause = Text("Pause", font);
 	pause.setCharacterSize(100);
 	pause.setStyle(Text::Bold);
 	pause.setFillColor(Color::White);
-	pause.setPosition(400, 200);
+	pause.setPosition(400, 100);
 
 
 	pause2 = Text("Press e key to continue", font);
-	pause2.setCharacterSize(40);
+	pause2.setCharacterSize(20);
 	pause2.setStyle(Text::Bold);
 	pause2.setFillColor(Color::White);
-	pause2.setPosition(300, 320);
+	pause2.setPosition(420, 220);
+
+	pause3 = Text("Press esc key to return to the menu", font);
+	pause3.setCharacterSize(20);
+	pause3.setStyle(Text::Bold);
+	pause3.setFillColor(Color::White);
+	pause3.setPosition(370, 280);
 
 	window->draw(pause);
 	window->draw(pause2);
+	window->draw(pause3);
 }
 
 void GameManager::DrawDeath()
@@ -362,19 +372,27 @@ void GameManager::DrawCredits()
 
 	Text credits2;
 
+	Text credits3;
+
 	while (!escaped)
 	{
 		credits = Text("Game Made By", font);
 		credits.setCharacterSize(80);
 		credits.setStyle(Text::Bold);
 		credits.setFillColor(Color::White);
-		credits.setPosition(300, 200);
+		credits.setPosition(250, 200);
 
 		credits2 = Text("Joaquin Herrero Ledner", font);
 		credits2.setCharacterSize(40);
 		credits2.setStyle(Text::Bold);
 		credits2.setFillColor(Color::White);
 		credits2.setPosition(300, 300);
+
+		credits3 = Text("Pres esc key to return to the menu", font);
+		credits3.setCharacterSize(30);
+		credits3.setStyle(Text::Bold);
+		credits3.setFillColor(Color::White);
+		credits3.setPosition(270, 400);
 
 		if (Keyboard::isKeyPressed(Keyboard::Escape))
 		{
@@ -384,6 +402,7 @@ void GameManager::DrawCredits()
 		window->clear();
 		window->draw(credits);
 		window->draw(credits2);
+		window->draw(credits3);
 		window->display();
 	}
 }
@@ -392,15 +411,21 @@ void GameManager::GameLoop()
 {
 	float score = 0;
 
+	float timer = 0;
+
+	int cooldown = 2;
+
 	bool collision = false;
 
 	bool pause = false;
+
+	bool actionPressed = false;
 
 	player->RestartPlayer();
 	obstacle.ResetObstacle();
 	floor.ResetFloor();
 
-	while (player->IsAlive(collision) == false || pause != false)
+	while (player->IsAlive(collision) == false || pause == true)
 	{
 		RestartClock();
 
@@ -409,6 +434,8 @@ void GameManager::GameLoop()
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
 			{
 				pause = true;
+
+				actionPressed = true;
 			}
 
 			PlayerMovement();
@@ -442,10 +469,32 @@ void GameManager::GameLoop()
 
 		if (pause == true)
 		{
-			if (Keyboard::isKeyPressed(Keyboard::E))
+			if (actionPressed == true)
 			{
-				pause = false;
+				timer += dt.asSeconds();
+
+				if (timer >= cooldown)
+				{
+					timer = 0;
+
+					actionPressed = false;
+				}
 			}
+
+			if (actionPressed == false)
+			{
+				if (Keyboard::isKeyPressed(Keyboard::E))
+				{
+					pause = false;
+				}
+
+				else if (Keyboard::isKeyPressed(Keyboard::Escape))
+				{
+					return;
+
+					cout << "a" << endl;
+				}
+			}			
 		}
 
 		DrawGame();
