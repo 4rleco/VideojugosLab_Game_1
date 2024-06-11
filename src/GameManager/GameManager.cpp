@@ -60,6 +60,16 @@ void GameManager::PlayerMovement()
 
 	float gravity = 100.0f;
 
+	if (PlayerNFloorCollision(grounded))
+	{
+		grounded = true;
+	}
+
+	if (PlayerNFloorCollision(grounded) == false)
+	{
+		grounded = false;
+	}
+
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		playerPosY -= player->GetSpeed().y * dt.asSeconds() * 5;
@@ -72,9 +82,7 @@ void GameManager::PlayerMovement()
 	{
 		playerPosY += gravity * dt.asSeconds();
 		player->SetPosY(playerPosY);
-		player->UpdatePosition(playerPosX, playerPosY);
-
-		PlayerNFloorCollision(grounded);
+		player->UpdatePosition(playerPosX, playerPosY);		
 	}
 }
 
