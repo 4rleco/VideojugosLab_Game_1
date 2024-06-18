@@ -19,8 +19,8 @@ GameManager::GameManager(RenderWindow* window)
 
 	this->player = new Player(screenWidth / 4, screenWidth / 4, 650.0f, 650.0f, 50.0f, 100.0f);
 
-	this->obstacle = Obstacle::Obstacle();
-	this->obstacle = Obstacle::Obstacle();
+	this->obstacle = Obstacle();
+	this->obstacle1 = Obstacle();
 
 	this->floor = Floor::Floor();
 
@@ -32,6 +32,7 @@ GameManager::GameManager(RenderWindow* window)
 GameManager::~GameManager()
 {
 	delete player;
+	delete window;
 }
 
 void GameManager::CreateGame()
@@ -39,6 +40,7 @@ void GameManager::CreateGame()
 	this->player->CreatePlayer();
 
 	obstacle.CreateObstacle();
+	obstacle1.CreateObstacle();
 
 	floor.CreateFloor();
 }
@@ -60,12 +62,7 @@ void GameManager::PlayerMovement()
 
 	float gravity = 100.0f;
 
-	if (PlayerNFloorCollision(grounded))
-	{
-		grounded = true;
-	}
-
-	if (PlayerNFloorCollision(grounded) == false)
+	if (!PlayerNFloorCollision(grounded))
 	{
 		grounded = false;
 	}
@@ -102,7 +99,7 @@ void GameManager::ScoreText(int scoreInt)
 	score.setPosition(800.0f, 2.0f);
 }
 
-void GameManager::ObstacleMovement()
+void GameManager::ObstacleMovement(Obstacle& obstacle)
 {
 	float speed = 300.0f;
 
@@ -119,16 +116,20 @@ void GameManager::FloorMovement()
 {
 	float speed = 200.0f;
 
+	int LeftScreenLimit = 0;
+
 	speed *= dt.asSeconds();
 
 	floor.SetPosX(speed);
 
 	floor.UpdateFloorPosition();
 
+	cout << floor.GetWidh() << endl;
+
 	floor.RestarPosition();
 }
 
-bool GameManager::PlayerNObstacleCollision(bool& collision)
+bool GameManager::PlayerNObstacleCollision(Obstacle obstacle, bool& collision)
 {
 	if ((player->GetPosX() + player->GetWidh() >= obstacle.GetPosX()) &&
 		(player->GetPosY() + player->GetHeight() >= obstacle.GetPosY()) &&
@@ -170,6 +171,7 @@ void GameManager::DrawGame()
 	window->draw(player->GetPlayerShape());
 
 	window->draw(obstacle.GetObstacleShape());
+	window->draw(obstacle1.GetObstacleShape());
 
 	window->draw(score);
 }
@@ -431,6 +433,7 @@ void GameManager::GameLoop()
 
 	player->RestartPlayer();
 	obstacle.ResetObstacle();
+	obstacle1.ResetObstacle();
 	floor.ResetFloor();
 
 	while (player->IsAlive(collision) == false || pause == true)
@@ -448,13 +451,15 @@ void GameManager::GameLoop()
 
 			PlayerMovement();
 
-			ObstacleMovement();
+			ObstacleMovement(obstacle);
+			ObstacleMovement(obstacle1);
 
 			FloorMovement();
 
 			Score(score);
 
-			PlayerNObstacleCollision(collision);
+			PlayerNObstacleCollision(obstacle, collision);
+			PlayerNObstacleCollision(obstacle1, collision);
 
 			PlayerFallsOfScreen(collision);
 		}
@@ -499,8 +504,6 @@ void GameManager::GameLoop()
 				else if (Keyboard::isKeyPressed(Keyboard::Escape))
 				{
 					return;
-
-					cout << "a" << endl;
 				}
 			}			
 		}

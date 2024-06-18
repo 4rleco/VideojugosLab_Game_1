@@ -83,6 +83,8 @@ void Floor::RestarPosition()
 		posX = 1100;
 
 		SetWidth();
+
+		rectangle.setSize(Vector2f(width, height));
 	}
 }
 

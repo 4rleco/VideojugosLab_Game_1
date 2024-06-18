@@ -20,6 +20,7 @@ private:
 	Player* player;
 
 	Obstacle obstacle;
+	Obstacle obstacle1;
 
 	Floor floor;
 
@@ -76,11 +77,12 @@ public:
 
 	void ScoreText(int scoreInt);
 
-	void ObstacleMovement();
+	void ObstacleMovement(Obstacle& obstacle);
 
 	void FloorMovement();
 
-	bool PlayerNObstacleCollision(bool& collision);
+	bool PlayerNObstacleCollision(Obstacle obstacle,
+		bool& collision);
 
 	bool PlayerNFloorCollision(bool& collision);
 
