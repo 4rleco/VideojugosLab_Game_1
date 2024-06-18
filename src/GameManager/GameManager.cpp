@@ -62,16 +62,14 @@ void GameManager::PlayerMovement()
 
 	float gravity = 100.0f;
 
-	if (!PlayerNFloorCollision(grounded))
-	{
-		grounded = false;
-	}
+	PlayerNFloorCollision(grounded);
 
 	if (Keyboard::isKeyPressed(Keyboard::Space))
 	{
 		playerPosY -= player->GetSpeed().y * dt.asSeconds() * 5;
 		player->SetPosY(playerPosY);
 		player->UpdatePosition(playerPosX, playerPosY);
+
 		grounded = false;
 	}
 
@@ -79,7 +77,7 @@ void GameManager::PlayerMovement()
 	{
 		playerPosY += gravity * dt.asSeconds();
 		player->SetPosY(playerPosY);
-		player->UpdatePosition(playerPosX, playerPosY);		
+		player->UpdatePosition(playerPosX, playerPosY);
 	}
 }
 
@@ -148,6 +146,11 @@ bool GameManager::PlayerNFloorCollision(bool& collision)
 		(player->GetPosY() <= floor.GetPosY() + floor.GetHeight()))
 	{
 		return collision = true;
+	}
+
+	else
+	{
+		return collision = false;
 	}
 }
 
@@ -464,9 +467,9 @@ void GameManager::GameLoop()
 			PlayerFallsOfScreen(collision);
 		}
 
-		ScoreText(score);		
+		ScoreText(score);
 
-		window->clear();		
+		window->clear();
 
 		if (pause == true && player->IsAlive(collision) == false)
 		{
@@ -478,7 +481,7 @@ void GameManager::GameLoop()
 			pause = true;
 
 			DrawDeath();
-		}		
+		}
 
 		if (pause == true)
 		{
@@ -505,12 +508,12 @@ void GameManager::GameLoop()
 				{
 					return;
 				}
-			}			
+			}
 		}
 
 		DrawGame();
 
-		window->display();		
+		window->display();
 	}
 }
 
