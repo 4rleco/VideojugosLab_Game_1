@@ -184,7 +184,9 @@ void GameManager::InitGame()
 {
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
 
-	font.loadFromFile("font/arial.ttf");
+	font.loadFromFile("res/font/arial.ttf");
+
+	backgroundBuffer.loadFromFile("res/audio/Float in Space.wav");
 
 	StartRand();
 
@@ -445,6 +447,7 @@ void GameManager::GameLoop()
 	obstacle.ResetObstacle();
 	obstacle1.ResetObstacle();
 	floor.ResetFloor();
+	backgroundMusic.setBuffer(backgroundBuffer);
 
 	while (window->isOpen() && player->IsAlive(collision) == false || pause == true)
 	{
@@ -464,6 +467,8 @@ void GameManager::GameLoop()
 
 				actionPressed = true;
 			}
+
+			backgroundMusic.play();
 
 			PlayerMovement();
 
@@ -486,6 +491,7 @@ void GameManager::GameLoop()
 
 		if (pause == true && player->IsAlive(collision) == false)
 		{
+			backgroundMusic.stop();
 			DrawPause();
 		}
 

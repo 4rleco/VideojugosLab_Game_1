@@ -3,6 +3,8 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Audio/Sound.hpp>
+#include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
 #include <iostream>
@@ -23,6 +25,9 @@ private:
 	Obstacle obstacle1;
 
 	Floor floor;
+
+	SoundBuffer backgroundBuffer;
+	Sound backgroundMusic;
 
 	Event event;
 
