@@ -93,5 +93,7 @@ void Player::RestartPlayer()
 	posX = initialPosX;
 	posY = initialPosY;
 
+	rectangle.setPosition(posX, posY);
+
 	isAlive = true;
 }

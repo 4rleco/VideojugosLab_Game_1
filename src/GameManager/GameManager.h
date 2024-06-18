@@ -24,6 +24,8 @@ private:
 
 	Floor floor;
 
+	Event event;
+
 	Clock clock;
 
 	Time dt;

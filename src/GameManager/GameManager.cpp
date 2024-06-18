@@ -2,6 +2,7 @@
 
 GameManager::GameManager(RenderWindow* window)
 {
+	this->event = Event();
 	this->clock = Clock();
 	this->dt = Time();
 	this->font = Font();
@@ -387,8 +388,14 @@ void GameManager::DrawCredits()
 
 	Text credits3;
 
-	while (!escaped)
+	while (window->isOpen() && !escaped)
 	{
+		while (window->pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window->close();
+		}
+
 		credits = Text("Game Made By", font);
 		credits.setCharacterSize(80);
 		credits.setStyle(Text::Bold);
@@ -439,9 +446,15 @@ void GameManager::GameLoop()
 	obstacle1.ResetObstacle();
 	floor.ResetFloor();
 
-	while (player->IsAlive(collision) == false || pause == true)
+	while (window->isOpen() && player->IsAlive(collision) == false || pause == true)
 	{
 		RestartClock();
+
+		while (window->pollEvent(event))
+		{
+			if (event.type == Event::Closed)
+				window->close();
+		}
 
 		if (!pause)
 		{
@@ -530,8 +543,6 @@ void GameManager::RunGame()
 	while (window->isOpen())
 	{
 		RestartClock();
-
-		Event event;
 
 		while (window->pollEvent(event))
 		{

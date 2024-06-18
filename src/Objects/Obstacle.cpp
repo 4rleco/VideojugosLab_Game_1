@@ -51,7 +51,7 @@ float Obstacle::SetPosY()
 {
 	do
 	{
-		posY = rand() % 680 + 70;
+		posY = rand() % 620 + 70;
 
 	} while (posY >= 720);
 
