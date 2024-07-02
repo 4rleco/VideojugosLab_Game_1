@@ -35,9 +35,7 @@ GameManager::GameManager()
 GameManager::~GameManager()
 {
 	delete player;
-	cout << &window << endl;
 	delete window;
-	cout << &window << endl;
 	delete backgroundMusic;
 }
 
@@ -77,6 +75,7 @@ void GameManager::PlayerMovement()
 		player->UpdatePosition(playerPosX, playerPosY);
 
 		grounded = false;
+		jump.play();
 	}
 
 	if (grounded == false)
@@ -185,18 +184,40 @@ void GameManager::DrawGame()
 	window->draw(score);
 }
 
-void GameManager::InitGame()
+void GameManager::InitSounds()
 {
-	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
+	menuOptionBuffer.loadFromFile("res/audio/MenuOption.mp3");
+	menuOption.setBuffer(menuOptionBuffer);
 
-	font.loadFromFile("res/font/arial.ttf");	
+	changeSceneBuffer.loadFromFile("res/audio/ChangeScene.wav");
+	changeScene.setBuffer(changeSceneBuffer);
 
+	jumpBuffer.loadFromFile("res/audio/Jump.mp3");
+	jump.setBuffer(jumpBuffer);
+
+	deathBuffer.loadFromFile("res/audio/ChangeScene.mp3");
+	death.setBuffer(deathBuffer);
+}
+
+void GameManager::InitMusic()
+{
 	backgroundMusic->openFromFile("res/audio/BackgroundMusic.wav");
 
 	backgroundMusic->setPosition(0, 1, 10);
 	backgroundMusic->setPitch(1);
 	backgroundMusic->setVolume(50);
 	backgroundMusic->setLoop(true);
+}
+
+void GameManager::InitGame()
+{
+	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
+
+	font.loadFromFile("res/font/arial.ttf");
+
+	InitMusic();
+
+	InitSounds();
 
 	StartRand();
 
@@ -216,6 +237,9 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 
 	int firstOption = Game;
 	int lastOption = Exit;
+
+	menuOption.setBuffer(menuOptionBuffer);
+	changeScene.setBuffer(changeSceneBuffer);
 
 	menu = Text("Menu", font);
 	menu.setCharacterSize(100);
@@ -253,7 +277,9 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 			selection++;
 
 			actionPressed = true;
+
 		}
+		menuOption.play();
 	}
 
 	if (actionPressed == true)
@@ -287,6 +313,7 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 
 			if (Keyboard::isKeyPressed(Keyboard::Enter))
 			{
+				changeScene.play();
 				GameLoop();
 			}
 		}
@@ -303,6 +330,7 @@ void GameManager::DrawMenu(int& selection, float& timer, bool& actionPressed)
 
 			if (Keyboard::isKeyPressed(Keyboard::Enter))
 			{
+				changeScene.play();
 				DrawCredits();
 			}
 		}
@@ -453,6 +481,8 @@ void GameManager::GameLoop()
 
 	bool actionPressed = false;
 
+	bool escaped = false;
+
 	player->RestartPlayer();
 	obstacle.ResetObstacle();
 	obstacle1.ResetObstacle();
@@ -460,16 +490,16 @@ void GameManager::GameLoop()
 
 	backgroundMusic->play();
 
-	while (window->isOpen() && player->IsAlive(collision) == false || pause == true)
+	while (window->isOpen() && escaped == false && player->IsAlive(collision) == false || pause == true)
 	{
-		RestartClock();		
+		RestartClock();
 
 		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
 				window->close();
 		}
-		
+
 		if (!pause)
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -505,8 +535,9 @@ void GameManager::GameLoop()
 
 		if (player->IsAlive(collision) == true)
 		{
-			pause = true;
 			backgroundMusic->stop();
+			death.play();
+			pause = true;
 			DrawDeath();
 		}
 
@@ -528,12 +559,15 @@ void GameManager::GameLoop()
 			{
 				if (Keyboard::isKeyPressed(Keyboard::E))
 				{
+					menuOption.play();
 					pause = false;
 				}
 
 				else if (Keyboard::isKeyPressed(Keyboard::Escape))
 				{
-					return;
+					changeScene.play();
+					pause = false;
+					escaped = true;
 				}
 			}
 		}
@@ -565,6 +599,7 @@ void GameManager::RunGame()
 		}
 
 		backgroundMusic->stop();
+		jump.stop();
 
 		window->clear();
 		DrawMenu(selection, timer, actionPressed);

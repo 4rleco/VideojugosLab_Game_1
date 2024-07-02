@@ -29,6 +29,18 @@ private:
 
 	Music* backgroundMusic;
 
+	SoundBuffer menuOptionBuffer; 
+	Sound menuOption;
+
+	SoundBuffer changeSceneBuffer;
+	Sound changeScene;
+
+	SoundBuffer jumpBuffer;
+	Sound jump;
+
+	SoundBuffer deathBuffer;
+	Sound death;
+
 	Event event;
 
 	Clock clock;
@@ -67,6 +79,10 @@ public:
 	void DrawDeath();
 
 	void DrawCredits();
+
+	void InitSounds();
+
+	void InitMusic();
 
 	void InitGame();
 
