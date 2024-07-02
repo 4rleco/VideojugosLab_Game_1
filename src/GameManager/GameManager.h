@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Audio/Music.hpp>
 #include <SFML/Audio/Sound.hpp>
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Window/Keyboard.hpp>
@@ -26,8 +27,7 @@ private:
 
 	Floor floor;
 
-	SoundBuffer backgroundBuffer;
-	Sound backgroundMusic;
+	Music* backgroundMusic;
 
 	Event event;
 
@@ -57,7 +57,7 @@ private:
 	bool isAlive;
 
 public:
-	GameManager(RenderWindow* window);
+	GameManager();
 	~GameManager();
 
 	void DrawMenu(int& selection, float& timer, bool& actionPressed);

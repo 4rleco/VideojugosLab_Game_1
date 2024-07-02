@@ -1,11 +1,13 @@
 #include "GameManager.h"
 
-GameManager::GameManager(RenderWindow* window)
+GameManager::GameManager()
 {
 	this->event = Event();
 	this->clock = Clock();
 	this->dt = Time();
 	this->font = Font();
+
+	this->backgroundMusic = new Music();
 
 	this->score = Text();
 	this->menu = Text();
@@ -13,7 +15,7 @@ GameManager::GameManager(RenderWindow* window)
 	this->credits = Text();
 	this->exit = Text();
 
-	this->window = window;
+	this->window = new RenderWindow();
 
 	this->screenWidth = 1080;
 	this->screenHeight = 720;
@@ -33,7 +35,10 @@ GameManager::GameManager(RenderWindow* window)
 GameManager::~GameManager()
 {
 	delete player;
+	cout << &window << endl;
 	delete window;
+	cout << &window << endl;
+	delete backgroundMusic;
 }
 
 void GameManager::CreateGame()
@@ -184,9 +189,14 @@ void GameManager::InitGame()
 {
 	window = new RenderWindow(VideoMode(screenWidth, screenHeight), "SideScroller");
 
-	font.loadFromFile("res/font/arial.ttf");
+	font.loadFromFile("res/font/arial.ttf");	
 
-	backgroundBuffer.loadFromFile("res/audio/Float in Space.wav");
+	backgroundMusic->openFromFile("res/audio/BackgroundMusic.wav");
+
+	backgroundMusic->setPosition(0, 1, 10);
+	backgroundMusic->setPitch(1);
+	backgroundMusic->setVolume(50);
+	backgroundMusic->setLoop(true);
 
 	StartRand();
 
@@ -447,18 +457,19 @@ void GameManager::GameLoop()
 	obstacle.ResetObstacle();
 	obstacle1.ResetObstacle();
 	floor.ResetFloor();
-	backgroundMusic.setBuffer(backgroundBuffer);
+
+	backgroundMusic->play();
 
 	while (window->isOpen() && player->IsAlive(collision) == false || pause == true)
 	{
-		RestartClock();
+		RestartClock();		
 
 		while (window->pollEvent(event))
 		{
 			if (event.type == Event::Closed)
 				window->close();
 		}
-
+		
 		if (!pause)
 		{
 			if (Keyboard::isKeyPressed(Keyboard::Escape))
@@ -467,8 +478,6 @@ void GameManager::GameLoop()
 
 				actionPressed = true;
 			}
-
-			backgroundMusic.play();
 
 			PlayerMovement();
 
@@ -491,14 +500,13 @@ void GameManager::GameLoop()
 
 		if (pause == true && player->IsAlive(collision) == false)
 		{
-			backgroundMusic.stop();
 			DrawPause();
 		}
 
 		if (player->IsAlive(collision) == true)
 		{
 			pause = true;
-
+			backgroundMusic->stop();
 			DrawDeath();
 		}
 
@@ -555,6 +563,8 @@ void GameManager::RunGame()
 			if (event.type == Event::Closed)
 				window->close();
 		}
+
+		backgroundMusic->stop();
 
 		window->clear();
 		DrawMenu(selection, timer, actionPressed);

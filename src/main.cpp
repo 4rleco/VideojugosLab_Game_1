@@ -2,11 +2,9 @@
 
 int main()
 {
-	RenderWindow window;
+	GameManager gameManager = GameManager();
 
-	GameManager gameManager = GameManager(&window);
-
-	gameManager.RunGame();
+	gameManager.RunGame();	
 
 	return 0;
 }
