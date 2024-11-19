@@ -75,10 +75,12 @@ void GameManager::PlayerMovement()
 		player->UpdatePosition(playerPosX, playerPosY);
 
 		grounded = false;
-		jump.play();
 	}
 
-	if (grounded == false)
+	cout << "jump.play" << endl;
+	jump.play();
+
+	if (!grounded)
 	{
 		playerPosY += gravity * dt.asSeconds();
 		player->SetPosY(playerPosY);
@@ -127,8 +129,6 @@ void GameManager::FloorMovement()
 
 	floor.UpdateFloorPosition();
 
-	cout << floor.GetWidh() << endl;
-
 	floor.RestarPosition();
 }
 
@@ -174,7 +174,10 @@ bool GameManager::PlayerFallsOfScreen(bool& collision)
 
 void GameManager::DrawGame()
 {
-	window->draw(floor.GetFloorShape());
+	floorSprite.setPosition(floor.GetPosX(), floor.GetPosY());
+	floorSprite.setScale(floor.GetWidh(), floor.GetHeight());
+	window->draw(floorSprite);
+	//window->draw(floor.GetFloorShape());
 
 	window->draw(player->GetPlayerShape());
 
@@ -199,6 +202,12 @@ void GameManager::InitSounds()
 	death.setBuffer(deathBuffer);
 }
 
+void GameManager::InitTextures()
+{
+	floorTexture.loadFromFile("res/sprites/Asteroid.png");
+	floorSprite.setTexture(floorTexture);
+}
+
 void GameManager::InitMusic()
 {
 	backgroundMusic->openFromFile("res/audio/BackgroundMusic.wav");
@@ -218,6 +227,8 @@ void GameManager::InitGame()
 	InitMusic();
 
 	InitSounds();
+
+	InitTextures();
 
 	StartRand();
 

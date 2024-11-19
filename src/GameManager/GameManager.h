@@ -8,6 +8,8 @@
 #include <SFML/Audio/SoundBuffer.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
 #include <iostream>
 
 #include "Objects/Player.h"
@@ -40,6 +42,9 @@ private:
 
 	SoundBuffer deathBuffer;
 	Sound death;
+
+	Texture floorTexture;
+	Sprite floorSprite;
 
 	Event event;
 
@@ -74,6 +79,8 @@ public:
 
 	void DrawMenu(int& selection, float& timer, bool& actionPressed);
 
+	void DrawGame();
+
 	void DrawPause();
 
 	void DrawDeath();
@@ -81,6 +88,8 @@ public:
 	void DrawCredits();
 
 	void InitSounds();
+
+	void InitTextures();
 
 	void InitMusic();
 
@@ -112,6 +121,4 @@ public:
 	bool PlayerFallsOfScreen(bool& collision);
 
 	void GameLoop();
-
-	void DrawGame();
 };
