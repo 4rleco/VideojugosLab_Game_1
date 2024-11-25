@@ -130,6 +130,24 @@ void GameManager::FloorMovement()
 	floor.UpdateFloorPosition();
 
 	floor.RestarPosition();
+
+	floorSprite.setPosition(floor.GetPosX(), floor.GetPosY());
+	floorSprite.setScale(floor.GetWidh(), floor.GetHeight());
+}
+
+void GameManager::BackgroundParallax(float & x, bool pasue)
+{
+	if (!pasue)
+	{
+		x -= 0.05;
+
+		if (x + screenWidth < 0)
+		{
+			x = screenWidth;
+		}
+
+		backgroundSprite.setPosition(x, 0);
+	}
 }
 
 bool GameManager::PlayerNObstacleCollision(Obstacle obstacle, bool& collision)
@@ -174,10 +192,10 @@ bool GameManager::PlayerFallsOfScreen(bool& collision)
 
 void GameManager::DrawGame()
 {
-	floorSprite.setPosition(floor.GetPosX(), floor.GetPosY());
-	floorSprite.setScale(floor.GetWidh(), floor.GetHeight());
+	window->draw(backgroundSprite);
+
 	window->draw(floorSprite);
-	//window->draw(floor.GetFloorShape());
+	window->draw(floor.GetFloorShape());
 
 	window->draw(player->GetPlayerShape());
 
@@ -206,6 +224,9 @@ void GameManager::InitTextures()
 {
 	floorTexture.loadFromFile("res/sprites/Asteroid.png");
 	floorSprite.setTexture(floorTexture);
+
+	backgroundTexture.loadFromFile("res/sprites/space.png");
+	backgroundSprite.setTexture(backgroundTexture);
 }
 
 void GameManager::InitMusic()
@@ -486,6 +507,8 @@ void GameManager::GameLoop()
 
 	int cooldown = 2;
 
+	float backgroundX = 0.0f;
+
 	bool collision = false;
 
 	bool pause = false;
@@ -537,12 +560,7 @@ void GameManager::GameLoop()
 
 		ScoreText(score);
 
-		window->clear();
-
-		if (pause == true && player->IsAlive(collision) == false)
-		{
-			DrawPause();
-		}
+		window->clear();		
 
 		if (player->IsAlive(collision) == true)
 		{
@@ -583,7 +601,14 @@ void GameManager::GameLoop()
 			}
 		}
 
+		BackgroundParallax(backgroundX, pause);
+
 		DrawGame();
+
+		if (pause == true && player->IsAlive(collision) == false)
+		{
+			DrawPause();
+		}
 
 		window->display();
 	}

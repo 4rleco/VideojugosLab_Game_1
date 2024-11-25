@@ -46,6 +46,9 @@ private:
 	Texture floorTexture;
 	Sprite floorSprite;
 
+	Texture backgroundTexture;
+	Sprite backgroundSprite;
+
 	Event event;
 
 	Clock clock;
@@ -112,6 +115,8 @@ public:
 	void ObstacleMovement(Obstacle& obstacle);
 
 	void FloorMovement();
+
+	void BackgroundParallax(float & x, bool pause);
 
 	bool PlayerNObstacleCollision(Obstacle obstacle,
 		bool& collision);

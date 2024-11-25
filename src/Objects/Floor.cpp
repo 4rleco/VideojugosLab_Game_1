@@ -12,7 +12,7 @@ Floor::Floor()
 	this->posY = 680.0f;
 
 	this->width = initialWidth;
-	this->height = 720.0f;
+	this->height = 20.0f;
 
 	this->thickness = 5;
 }
